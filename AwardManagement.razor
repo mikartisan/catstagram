@@ -1,0 +1,134 @@
+@using HRPv5.ShareUI.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Forms
+@using global::Shared.Enteties.Dtos.MasterData
+
+@inject ICourseService _iCourseService;
+
+<style>
+    .custom-file-input {
+        position: absolute;
+        background-color: lightblue;
+        color: black;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        text-align: center;
+        opacity: 0;
+    }
+
+        .custom-file-input:hover {
+            background-color: deepskyblue;
+        }
+
+
+    .hover {
+        border-style: solid;
+        background-color: deepskyblue;
+    }
+
+    ::deep input[type=file] {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .error-message-container {
+        color: red;
+        text-align: center;
+    }
+</style>
+
+<div class="upload-file-container @HoverClass" @ondragenter="OnDragEnter" @ondragleave="OnDragLeave" @ondragover="OnDragEnter" @ondragend="OnDragEnd" style="position: relative;">
+    <div class="image-container atom-s-space">
+        <img src="_content/HRPv5.ShareUI/images/upload-file-icon.svg" />
+    </div>
+    @* <div class="label-container">
+        <p class="atom-p text-center"><span class="click-to-upload-button fw-bold" style="color: #1A85CF; cursor:pointer" @onclick="TriggerFileInput">Click to upload</span> or drag and drop DOCX, CSV, or .XLSX (max. 800x400px)</p>
+    </div> *@
+    <InputFile name="file" type="file" class="form-control" OnChange="OnInputFileChange" accept=".xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+    <div class="d-flex justify-content-end gap-2 mt-3">
+        @* <button class="atom-btn atom-btn-outline-primary" @onclick="ModalClose">Cancel</button> *@
+        <button class="atom-btn atom-btn-primary txt-light" @onclick="ImportClick">Submit</button>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance CurrentModal { get; set; } = default!;
+    [CascadingParameter] IModalService Modal { get; set; } = default!;
+
+    void OnDragEnter(DragEventArgs e) => HoverClass = "hover";
+    void OnDragLeave(DragEventArgs e) => HoverClass = string.Empty;
+    void OnDragEnd(DragEventArgs e) => HoverClass = string.Empty;
+    private IBrowserFile selectedFile;
+    ElementReference fileDropContainer;
+    private InputFile fileInput;
+    private string HoverClass;
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    string downloadPath = string.Empty;
+    IBrowserFile importFile { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    // private async Task TriggerFileInput()
+    // {
+    //     await JS.InvokeVoidAsync("fileUploader.triggerFileInputClick");
+    // }
+
+    async Task DownloadFile()
+    {
+
+    }
+-
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        importFile = e.File;
+    }
+
+    async Task ImportClick()
+    {
+        if (importFile == null)
+        {
+            await _swal.FireAsync("Oops...", "Please select a file.", "info");
+            return;
+        }
+
+        CourseFileImport import = new CourseFileImport();
+
+        Stream stream = importFile.OpenReadStream();
+        MemoryStream ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        stream.Close();
+
+        import.File = new UploadedFileCourse
+            {
+                FileName = importFile.Name,
+                FileExtensionName = Path.GetExtension(importFile.Name),
+                FileContent = ms.ToArray(),
+            };
+
+        var res = await _iCourseService.ImportCourses(import);
+
+        if (res.Success ==  true)
+        {
+            ModalInstance.CloseAsync();
+            await _swal.FireAsync("Success", res.Message, "success");
+        }
+        else
+        {
+            await _swal.FireAsync("Oops...", res.Message, "error");
+        }
+    }
+
+    async Task ModalClose()
+    {
+        await CurrentModal.CancelAsync();
+    }
+
+}

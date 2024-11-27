@@ -12,7 +12,7 @@ const Stories = () => {
                 <div className="flex flex-col items-center">
                     <div className="relative w-20 h-20 rounded-full p-1 bg-gradient-to-r from-[#f0cea8] via-[#ecc293] to-[#e4aa67] flex items-center justify-center">
                         <div className="w-full h-full rounded-full border-4 border-white bg-white flex items-center justify-center">
-                            <img className='w-8 h-8' src={'/public/icons/plus-icon.svg'} alt="" />
+                            <img className='w-8 h-8' src={'/icons/plus-icon.svg'} alt="" />
                         </div>
                     </div>
                     <p className="text-center mt-2">Add Story</p>
