@@ -4,6 +4,8 @@ import AuthGuard from './components/AuthGuard';
 import LoginPage from './pages/Login';
 import SignUpPage from './pages/Signup';
 import Home from './pages/Home';
+import Post from './pages/Post';
+import Profile from './pages/Profile';
 import './App.css'
 
 function App() {
@@ -17,6 +19,22 @@ function App() {
           element={
             <AuthGuard>
               <Home />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <AuthGuard>
+              <Profile />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/post"
+          element={
+            <AuthGuard>
+              <Post />
             </AuthGuard>
           }
         />
