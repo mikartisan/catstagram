@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [conPassword, setConPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -16,11 +17,11 @@ const LoginPage = () => {
         setError('');
     
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-    
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            })
+
             if (error) {
                 setError(error.message);
             } else {
@@ -59,38 +60,56 @@ const LoginPage = () => {
                                                 <path d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z" fill="#ea4335" />
                                             </svg>
                                         </div>
-                                        <span className="ml-4">Log in with Google</span>
+                                        <span className="ml-4">Register with Google</span>
                                     </button>
 
                                     <button className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-[#fbf3e9] text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5">
                                         <div className="bg-white p-1 ml-3 rounded-full">
                                             <img className='w-6' src={'/icons/facebook.svg'} alt="google" />
                                         </div>
-                                        <span className="ml-4">Log in with Facebook</span>
+                                        <span className="ml-4">Register with Facebook</span>
                                     </button>
                                 </div>
 
                                 <div className="my-12 border-b text-center">
                                     <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-                                    Or log in with e-mail
+                                    Or register with e-mail
                                     </div>
                                 </div>
 
                                 <div className="mx-auto max-w-xs">
                                     <form action="#" onSubmit={handleLogin}>
+
                                         <input
                                             className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                            type="email"
+                                            placeholder="Username"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+
+                                        <input
+                                            className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                                             type="email"
                                             placeholder="Email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
+
                                         <input
                                             className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                                             type="password"
                                             placeholder="Password"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)} 
+                                        />
+
+                                        <input
+                                            className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
+                                            type="password"
+                                            placeholder="Confirm Password"
+                                            value={conPassword}
+                                            onChange={(e) => setConPassword(e.target.value)} 
                                         />
                                         {error && 
                                             <div className="pt-3 text-xs text-red-400 rounded-lg" role="alert">
@@ -103,22 +122,11 @@ const LoginPage = () => {
                                                 <circle cx="8.5" cy="7" r="4" />
                                                 <path d="M20 8v6M23 11h-6" />
                                             </svg>
-                                            <span className="ml-3">{isLoading ? 'Logging in...' : 'Log in'}</span>
+                                            <span className="ml-3">{isLoading ? 'Please wait...' : 'Register'}</span>
                                         </button>
-                                        <p class="text-left py-3 text-sm font-light text-gray-500 dark:text-gray-400">
-                                            Don’t have an account yet? 
-                                            <a href="/register" class="font-medium text-primary-600 hover:underline dark:text-primary-500"> Register</a>
-                                        </p>
-
-                                        <p className="mt-6 text-xs text-gray-600 text-center">
-                                            I agree to abide by CatStagram's{" "}
-                                            <a href="#" className="border-b border-gray-500 border-dotted">
-                                                Terms of Service
-                                            </a>{" "}
-                                            and its{" "}
-                                            <a href="#" className="border-b border-gray-500 border-dotted">
-                                                Privacy Policy
-                                            </a>
+                                        <p className="text-left py-3 text-sm font-light text-gray-500 dark:text-gray-400">
+                                            Already have an account?
+                                            <a href="/" className="font-medium text-primary-600 hover:underline dark:text-primary-500"> Login</a>
                                         </p>
                                     </form>
                                 </div>
@@ -140,4 +148,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Register;

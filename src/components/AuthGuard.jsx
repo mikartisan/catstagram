@@ -7,11 +7,9 @@ const AuthGuard = ({ children }) => {
     
     useEffect(() => {
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
-        if (!session) {
-            navigate("/");
-        } else {
-            navigate("/home");
-        }
+            if (!session) {
+                navigate("/");
+            } 
         });
     
         return () => data.subscription.unsubscribe();
