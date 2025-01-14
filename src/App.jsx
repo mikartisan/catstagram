@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import Post from './pages/Post';
 import Profile from './pages/Profile';
+import EditProfile from './pages/EditProfile';
 import './App.css'
 
 function App() {
@@ -27,6 +28,14 @@ function App() {
           element={
             <AuthGuard>
               <Profile />
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <AuthGuard>
+              <EditProfile />
             </AuthGuard>
           }
         />

@@ -9,16 +9,31 @@ const Navbar = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
-        // Check if user is logged in
-        const checkUserSession = async () => {
-            const { data } = await supabase.auth.getSession();
-            if (data.session) {
-                setUser(data.session.user);
+        // Fetch user details
+        const fetchUserData = async () => {
+            const { data: sessionData } = await supabase.auth.getSession();
+            
+            if (sessionData.session) {
+                const sessionUser = sessionData.session.user;
+
+                // Fetch user details from users table
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('username, first_name, last_name, gender, address')
+                    .eq('user_id', sessionUser.id)
+                    .single();
+
+                if (error) {
+                    console.error('Error fetching user data:', error);
+                } else {
+                    setUser(data);
+                }
             } else {
                 navigate('/'); 
             }
         };
-        checkUserSession();
+        
+        fetchUserData();
     }, [navigate]);
 
     // Sign out user
@@ -95,8 +110,8 @@ const Navbar = () => {
                                     style={{ top: '100%' }} 
                                 >
                                     <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                                        <div>{user?.name || "Guest"}</div>
-                                        <div className="font-medium truncate">{user?.email}</div>
+                                        <div>{user?.first_name + " " + user?.last_name}</div>
+                                        <div className="font-medium truncate">{user?.username}</div>
                                     </div>
                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUserAvatarButton">
                                         <li>

@@ -4,6 +4,7 @@ import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [conPassword, setConPassword] = useState('');
@@ -11,22 +12,54 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError('');
     
+        if (password !== conPassword) {
+            setError("Passwords do not match!");
+            setIsLoading(false);
+            return;
+        }
+    
         try {
-            const { data, error } = await supabase.auth.signUp({
+            // Sign up the user
+            const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-            })
-
-            if (error) {
-                setError(error.message);
-            } else {
-                navigate('/home');
+            });
+    
+            if (signUpError) {
+                setError(signUpError.message);
+                return;
             }
+    
+            // Get the user ID from the sign-up response
+            const userId = signUpData?.user?.id;
+    
+            if (!userId) {
+                setError('Sign-up successful, but no user ID returned.');
+                return;
+            }
+    
+            // Insert username and user details into the `users` table
+            const { error: insertError } = await supabase.from('users').insert([
+                {
+                    username: username,
+                    first_name: '', 
+                    last_name: '',  
+                    user_id: userId,
+                },
+            ]);
+    
+            if (insertError) {
+                setError('Failed to save user details: ' + insertError.message);
+                return;
+            }
+    
+            // Navigate to home if successful
+            navigate('/home');
         } catch (err) {
             setError('An unexpected error occurred.');
             console.error(err);
@@ -78,14 +111,14 @@ const Register = () => {
                                 </div>
 
                                 <div className="mx-auto max-w-xs">
-                                    <form action="#" onSubmit={handleLogin}>
+                                    <form action="#" onSubmit={handleRegister}>
 
                                         <input
                                             className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                            type="email"
+                                            type="text"
                                             placeholder="Username"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
                                         />
 
                                         <input

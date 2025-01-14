@@ -4,21 +4,39 @@ import { supabase } from "../supabaseClient";
 
 const UserPosts = () => {
     const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState(null); // Store user data
     const [posts, setPosts] = useState([]);
-    const [imageUrls, setImageUrls] = useState({}); // Store image URLs here
-    const [loading, setLoading] = useState(true); 
+    const [imageUrls, setImageUrls] = useState({});
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkUserSession = async () => {
             const { data } = await supabase.auth.getSession();
             if (data.session) {
-                setUser(data.session.user);
-                fetchUserPosts(data.session.user.id);
+                const sessionUser = data.session.user;
+                setUser(sessionUser);
+
+                // Fetch user details
+                const { data: userData, error } = await supabase
+                    .from('users')
+                    .select('username, first_name, last_name')
+                    .eq('user_id', sessionUser.id)
+                    .single();
+
+                if (error) {
+                    console.error("Error fetching user data:", error);
+                } else {
+                    setUserData(userData);
+                }
+
+                // Fetch posts
+                fetchUserPosts(sessionUser.id);
             } else {
-                navigate('/'); 
+                navigate('/');
             }
         };
+
         checkUserSession();
     }, [navigate]);
 
@@ -56,15 +74,14 @@ const UserPosts = () => {
             const { data, error } = await supabase
                 .storage
                 .from('catstagram')
-                .createSignedUrl(fullImagePath, 60); // URL expires after 60 seconds
+                .createSignedUrl(fullImagePath, 60); 
     
             if (error) {
                 console.error('Error generating signed URL:', error);
                 return '';
             }
-    
-            console.log('Signed URL:', data.signedUrl); // Log the signed URL
-            return data.signedUrl; // Correct key is `signedUrl`, not `signedURL`
+
+            return data.signedUrl; 
         } catch (error) {
             console.error('Catch block error:', error);
             return '';
@@ -109,7 +126,7 @@ const UserPosts = () => {
                         <img className="w-10 h-10 rounded-full object-cover mr-4 shadow" src={'profiles/profile1.jpg'} alt="avatar" />
                         <div className="w-full">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-semibold text-gray-900 -mt-1">{user?.email}</h2>
+                                <h2 className="text-lg font-semibold text-gray-900 -mt-1">{userData?.username}</h2>
                                 <small className="text-sm text-gray-700">4h ago</small>
                             </div>
                             <div className='pt-2'>
