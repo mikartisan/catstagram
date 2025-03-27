@@ -1,5 +1,5 @@
 
-# catstagram
+# 🐱 Catstagram 
 Instagram-inspired social media platform designed specifically for cat lovers.
 =======
 # React + Vite
