@@ -15,11 +15,11 @@ const Post = () => {
                         <img className="w-10 h-10 rounded-full object-cover mr-4 shadow" src={'profiles/profile1.jpg'} alt="avatar" />
                         <div className="w-full">
                             <div className="flex items-center justify-between">
-                                <h2 className="text-lg font-semibold text-gray-900 -mt-1">Fuzzy Noodles</h2>
+                                <h2 className="text-lg font-semibold text-gray-900 -mt-1">Sushi</h2>
                                 <small className="text-sm text-gray-700">4h ago</small>
                             </div>
                             <div className='pt-2'>
-                                <img src={'/post/post2.jpg'} alt="Image post" className='rounded-md bg-cover w-full h-[18rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]' />
+                                <img src={'/post/post2.jpg'} alt="Image post" className='rounded-md bg-cover w-full h-[22rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]' />
                             </div>
 
                             <p className="mt-3 text-gray-700 text-sm text-left">
@@ -60,7 +60,7 @@ const Post = () => {
                                 <small className="text-sm text-gray-700">23h ago</small>
                             </div>
                             <div className='pt-2'>
-                                <img src={'/post/post1.jpg'} alt="Image post" className='rounded-md bg-cover w-full h-[18rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]' />
+                                <img src={'/post/post1.jpg'} alt="Image post" className='rounded-md bg-cover w-full h-[22rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]' />
                             </div>
 
                             <p className="mt-3 text-gray-700 text-sm text-left">

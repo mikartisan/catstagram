@@ -94,7 +94,6 @@ const EditProfile = () => {
                     return;
                 }
     
-                // Get public URL with error handling
                 const { data: publicUrlData, error: urlError } = supabase.storage
                     .from('catstagram')
                     .getPublicUrl(`avatar/${fileName}`);
@@ -107,7 +106,6 @@ const EditProfile = () => {
     
                 console.log('Generated Public URL:', publicUrlData.publicUrl);
                 
-                // Rest of your update logic...
             } catch (error) {
                 console.error('Unexpected error:', error);
                 setMessage('An unexpected error occurred');

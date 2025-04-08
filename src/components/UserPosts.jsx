@@ -132,7 +132,7 @@ const UserPosts = () => {
                             <div className='pt-2'>
                                 {post.image_url && imageUrls[post.image_url] && (
                                     <img
-                                        className="rounded-md bg-cover w-full h-[18rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]"
+                                        className="rounded-md bg-cover w-full h-[22rem] sm:h-[20rem] md:h-[25rem] lg:h-[25rem] xl:h-[29rem]"
                                         src={imageUrls[post.image_url]} // Use the fetched URL
                                         alt="User Post"
                                     />
